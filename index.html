@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YASSER TECH TV</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700;900&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif}
+body{background:#000;color:#fff;overflow-x:hidden}
+
+/* Background Text */
+#bgText{
+position:fixed;top:50%;left:50%;
+transform:translate(-50%,-50%);
+font-size:12vw;font-weight:900;
+background:linear-gradient(90deg,#ffcc00,#ff6600,#ffcc00);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+opacity:.12;
+animation:pulse 6s infinite;
+z-index:-1;
+}
+@keyframes pulse{
+0%{transform:translate(-50%,-50%) scale(1)}
+50%{transform:translate(-50%,-50%) scale(1.1)}
+100%{transform:translate(-50%,-50%) scale(1)}
+}
+
+/* Header */
+header{text-align:center;padding:2rem;background:rgba(0,0,0,.6);backdrop-filter:blur(6px)}
+header h1{color:#ffcc00;font-size:3rem}
+header p{color:#ccc}
+
+/* Welcome Screen */
+#welcome{
+position:fixed;inset:0;
+background:rgba(0,0,0,.9);
+display:flex;flex-direction:column;
+align-items:center;justify-content:center;
+z-index:10;text-align:center;padding:2rem;
+}
+#welcome h2{font-size:3rem;color:#ffcc00}
+#welcome p{color:#ccc;margin-bottom:1.5rem}
+
+/* Carousel */
+.carousel-wrap{position:relative;width:85%;overflow:hidden}
+.carousel{display:flex;gap:1rem}
+.carousel img{
+width:160px;height:230px;
+border-radius:10px;cursor:pointer;
+transition:.3s;
+}
+.carousel img:hover{
+transform:scale(1.1);
+box-shadow:0 0 20px #ffcc00;
+}
+.arrow{
+position:absolute;top:50%;
+transform:translateY(-50%);
+background:rgba(0,0,0,.6);
+border:none;color:#ffcc00;
+font-size:2rem;cursor:pointer;
+padding:.5rem 1rem;border-radius:6px;
+}
+.arrow.left{left:0}
+.arrow.right{right:0}
+
+/* Buttons */
+.btn{
+margin-top:1.5rem;
+padding:1rem 2.5rem;
+font-size:1.2rem;
+border:none;border-radius:10px;
+background:#ffcc00;color:#000;
+font-weight:bold;cursor:pointer;
+transition:.3s;
+}
+.btn:hover{transform:scale(1.08)}
+
+.join{
+margin-top:1rem;
+background:#25D366;
+color:#fff;
+padding:.8rem 2rem;
+border-radius:10px;
+text-decoration:none;
+font-weight:bold;
+}
+.owner{color:#aaa;margin-top:.5rem}
+
+/* Main */
+main{max-width:1300px;margin:auto;padding:2rem;display:none}
+
+/* Search */
+.search{display:flex;justify-content:center;margin-bottom:2rem}
+.search input{width:300px;padding:.7rem;border:none;border-radius:6px 0 0 6px}
+.search button{padding:.7rem 1.2rem;border:none;background:#ffcc00;font-weight:bold}
+
+/* Loader */
+.loader{text-align:center;color:#ffcc00;margin:1rem}
+
+/* Grid */
+.section{font-size:1.5rem;color:#ffcc00;margin:1.5rem 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1.5rem}
+
+.card{
+background:rgba(255,255,255,.08);
+border-radius:10px;overflow:hidden;
+transition:.3s;
+}
+.card:hover{transform:translateY(-6px)}
+.card img{width:100%;height:270px;object-fit:cover}
+.card h3{font-size:1rem;padding:.5rem}
+.card p{font-size:.85rem;color:#ccc;padding:0 .5rem}
+
+/* Actions */
+.actions a{
+display:block;
+margin:.5rem;
+padding:.6rem;
+text-align:center;
+background:#ffcc00;
+color:#000;text-decoration:none;
+border-radius:6px;
+font-weight:bold;
+}
+.actions a.alt{background:#0f79af;color:#fff}
+
+/* Modal */
+#modal{
+display:none;position:fixed;inset:0;
+background:rgba(0,0,0,.95);
+z-index:99;overflow:auto;
+}
+.modal-box{
+max-width:750px;
+margin:5% auto;
+background:#111;padding:1.5rem;
+border-radius:10px;
+}
+.close{float:right;font-size:2rem;cursor:pointer;color:#ffcc00}
+
+footer{text-align:center;padding:1rem;color:#777}
+</style>
+</head>
+
+<body>
+
+<div id="bgText">YASSER TECH TV</div>
+
+<header>
+<h1>YASSER TECH TV</h1>
+<p>Trending Movies & TV Shows • Official Platforms Only</p>
+</header>
+
+<!-- WELCOME -->
+<div id="welcome">
+<h2>Karibu YASSER TECH TV</h2>
+<p>Gundua movies & TV shows maarufu kabla ya kuanza</p>
+
+<div class="carousel-wrap">
+<button class="arrow left" onclick="scrollC(-1)">❮</button>
+<div class="carousel" id="carousel"></div>
+<button class="arrow right" onclick="scrollC(1)">❯</button>
+</div>
+
+<button class="btn" onclick="start()">Anza</button>
+
+<a class="join" target="_blank"
+href="https://whatsapp.com/channel/0029Vb7BkaP7dmeg0yZiCS1I">
+📲 Join My Channel
+</a>
+<div class="owner">Owner: +255 691 548 458</div>
+</div>
+
+<main id="app">
+
+<div class="search">
+<input id="q" placeholder="Search movie or TV show">
+<button onclick="search()">Search</button>
+</div>
+
+<div id="loading" class="loader"></div>
+
+<div class="section">Search Results</div>
+<div class="grid" id="results"></div>
+
+</main>
+
+<!-- MODAL -->
+<div id="modal">
+<div class="modal-box">
+<span class="close" onclick="closeM()">×</span>
+<div id="modalBody"></div>
+</div>
+</div>
+
+<footer>© 2026 YASSER TECH SOLUTIONS</footer>
+
+<script>
+const API="f6b681ff";
+const trending=["Avengers","Avatar","Inception","Joker","Stranger Things","Breaking Bad"];
+let auto;
+
+window.onload=async()=>{
+const c=document.getElementById("carousel");
+for(let t of trending){
+const r=await fetch(`https://www.omdbapi.com/?t=${t}&apikey=${API}`);
+const d=await r.json();
+if(d.Poster){
+const i=document.createElement("img");
+i.src=d.Poster;
+i.onclick=()=>openM(d.imdbID);
+c.appendChild(i);
+}
+}
+auto=setInterval(()=>{c.scrollLeft+=1},30);
+c.onmouseenter=()=>clearInterval(auto);
+c.onmouseleave=()=>auto=setInterval(()=>{c.scrollLeft+=1},30);
+};
+
+function scrollC(d){carousel.scrollLeft+=d*300}
+
+function start(){
+welcome.style.display="none";
+app.style.display="block";
+}
+
+async function search(){
+const q=document.getElementById("q").value;
+if(!q)return;
+loading.innerText="🔍 Searching...";
+results.innerHTML="";
+const r=await fetch(`https://www.omdbapi.com/?s=${q}&apikey=${API}`);
+const d=await r.json();
+loading.innerText="";
+if(d.Search){
+d.Search.forEach(m=>{
+results.innerHTML+=`
+<div class="card" onclick="openM('${m.imdbID}')">
+<img src="${m.Poster}">
+<h3>${m.Title}</h3>
+<p>${m.Year}</p>
+</div>`;
+});
+}
+}
+
+async function openM(id){
+const r=await fetch(`https://www.omdbapi.com/?i=${id}&apikey=${API}`);
+const m=await r.json();
+modalBody.innerHTML=`
+<h2>${m.Title}</h2>
+<p>${m.Plot}</p>
+<div class="actions">
+<a href="https://www.youtube.com/results?search_query=${m.Title} trailer" target="_blank">▶ Watch Trailer</a>
+<a class="alt" href="https://www.google.com/search?q=watch ${m.Title} online" target="_blank">🌍 Official Platforms</a>
+</div>`;
+modal.style.display="block";
+}
+
+function closeM(){modal.style.display="none"}
+</script>
+
+</body>
+  </html>
